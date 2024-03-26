@@ -9,10 +9,8 @@ concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: true
 
-# permissions:
-#   id-token: write
-#   contents: read
-
+permissions:
+  issues: write
 
 jobs:
   deploy:
@@ -21,6 +19,7 @@ jobs:
   
     steps:
       - uses: trstringer/manual-approval@v1
+        timeout-minutes: 10
         with:
           secret: ${{ secrets.GITHUB_TOKEN }}
           approvers: maroKanatani
