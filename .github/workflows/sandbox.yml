@@ -18,13 +18,23 @@ jobs:
     timeout-minutes: 10
   
     steps:
+      - name: 'Set Issue Title & Body'
+        if: github.event_name == 'release'
+        run: |
+          echo 'ISSUE_TITLE=Release version N' >> $GITHUB_ENV
+          echo 'ISSUE_BODY=# aaaaaaaaaaaaaaaaaaaaaaa' >> $GITHUB_ENV
+      - name: 'Set Issue Title & Body'
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          echo 'ISSUE_TITLE=Manual Deploy' >> $GITHUB_ENV
+          echo 'ISSUE_BODY=$ Manual' >> $GITHUB_ENV
       - uses: trstringer/manual-approval@v1
         timeout-minutes: 10
         with:
           secret: ${{ secrets.GITHUB_TOKEN }}
           approvers: maroKanatani
           minimum-approvals: 1
-          issue-title: "Issue Title"
-          issue-body: "# Issue Title\n\nPlease approve this deployment."
+          issue-title: '${{ env.ISSUE_TITLE }}'
+          issue-body: '${{ env.ISSUE_BODY }}'
       - name: do something
         run: echo "Hello"
