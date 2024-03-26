@@ -22,7 +22,7 @@ jobs:
         if: github.event_name == 'release'
         run: |
           echo 'ISSUE_TITLE=${{ github.event.release.name }}' >> $GITHUB_ENV
-          echo 'ISSUE_BODY=${{ github.event.release.body }}\n- ${{ github.event.release.html_url }}' >> $GITHUB_ENV
+          echo 'ISSUE_BODY="${{ github.event.release.body }}\n- ${{ github.event.release.html_url }}"' >> $GITHUB_ENV
       - name: 'Set Issue Title & Body'
         if: github.event_name == 'workflow_dispatch'
         run: |
