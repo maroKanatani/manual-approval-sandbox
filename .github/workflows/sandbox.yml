@@ -1,0 +1,31 @@
+name: Do Something
+on:
+  workflow_dispatch:
+  release:
+    types:
+      - published
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+# permissions:
+#   id-token: write
+#   contents: read
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+  
+    steps:
+      - uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ secrets.GITHUB_TOKEN }}
+          approvers: maroKanatani
+          minimum-approvals: 1
+          issue-title: "Issue Title"
+          issue-body: "# Issue Title\n\nPlease approve this deployment."
+      - name: do something
+        run: echo "Hello"
