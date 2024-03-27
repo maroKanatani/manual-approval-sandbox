@@ -16,25 +16,26 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-  
+
     steps:
-      - name: 'Set Issue Title & Body'
-        if: github.event_name == 'release'
+      - name: "Set Issue Title & Body"
+        id: set_issue_title_body
+        if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
         run: |
-          echo 'ISSUE_TITLE=${{ github.event.release.name }}' >> $GITHUB_ENV
-          echo 'ISSUE_BODY=${{ github.event.release.body }}' >> $GITHUB_ENV
-      - name: 'Set Issue Title & Body'
-        if: github.event_name == 'workflow_dispatch'
-        run: |
-          echo 'ISSUE_TITLE=${{ github.event }}' >> $GITHUB_ENV
-          echo 'ISSUE_BODY=# Manual' >> $GITHUB_ENV
+          if [ "${{ github.event_name }}" == "release" ]; then
+            echo "::set-output name=ISSUE_TITLE::${{ github.event.release.name }}"
+            echo "::set-output name=ISSUE_BODY::${{ github.event.release.body }}"
+          else if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "::set-output name=ISSUE_TITLE::${{ github.event.release.name }}"
+            echo "::set-output name=ISSUE_BODY::${{ github.event.release.body }}"
+          fi
       - uses: trstringer/manual-approval@v1
         timeout-minutes: 10
         with:
           secret: ${{ secrets.GITHUB_TOKEN }}
           approvers: maroKanatani
           minimum-approvals: 1
-          issue-title: '${{ env.ISSUE_TITLE }}'
-          issue-body: '${{ env.ISSUE_BODY }}'
+          issue-title: ${{ steps.set_issue_title_body.outputs.ISSUE_TITLE }}
+          issue-body: ${{ steps.set_issue_title_body.outputs.ISSUE_BODY }}
       - name: do something
         run: echo "Hello"
