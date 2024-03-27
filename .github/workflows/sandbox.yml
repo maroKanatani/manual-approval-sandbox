@@ -24,20 +24,14 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            console.log("github.ref", "${{ github.ref }}");
-            console.log("github.event.ref", "${{ github.event.ref}}");
-            console.log("github.ref_name", "${{ github.ref_name }}");
-            console.log("github.ref_name", "${{ github.event.release.name }}");
-            console.log("github.ref_name", "${{ github.event.release.html_url }}");
-            console.log("github.ref_name", "${{ github.event.release.tag_name }}");
-
             let issueTitle = "";
             let issueBody = "";
 
             switch("${{ github.event_name }}") {
               case "release":
                 issueTitle = ":rocket: Release ${{ github.event.release.name }}";
-                issueBody = `${{ github.event.release.body }}`;
+                issueBody = `${{ github.event.release.body }}
+            - ${{ github.event.release.html_url }}`;
                 break;
               case "workflow_dispatch":
                 issueTitle = ":ambulance: Manual Deploy ${{ github.ref_name }}";
