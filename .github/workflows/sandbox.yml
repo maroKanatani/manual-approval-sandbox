@@ -24,9 +24,29 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            console.log(JSON.stringify("${{ github.event }}", null, 2))
-            const issueTitle = "${{ github.event.release.name }}";
-            const issueBody = `${{ github.event.release.body }}`;
+            console.log("github.ref", "${{ github.ref }}");
+            console.log("github.event.ref", "${{ github.event.ref}}");
+            console.log("github.ref_name", "${{ github.ref_name }}");
+
+            let issueTitle = "";
+            let issueBody = "";
+
+            switch("${{ github.event_name }}") {
+              case "release":
+                issueTitle = "${{ github.event.release.name }}";
+                issueBody = `${{ github.event.release.body }}`;
+                break;
+              case "workflow_dispatch":
+                issueTitle = "🚀 Manual Deploy ${{ github.ref_name }}";
+                issueBody = `## 確認事項
+                  - [ ] :warning: 本番環境に対して手動でのデプロイを実施します。
+                  - [ ] デプロイ対象のタグ: 
+                `;
+                break;
+              default:
+                throw new Error(`Unexpected event: ${{ github.event_name }}`);
+            }
+
             core.setOutput('ISSUE_TITLE', issueTitle);
             core.setOutput('ISSUE_BODY', issueBody);
 
