@@ -18,17 +18,16 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - name: "Set Issue Title & Body"
+      - uses: actions/github-script@v7
         id: set_issue_title_body
-        if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
-        run: |
-          if [ "${{ github.event_name }}" == "release" ]; then
-            echo "::set-output name=ISSUE_TITLE::${{ github.event.release.name }}"
-            echo "::set-output name=ISSUE_BODY::${{ github.event.release.body }}"
-          else if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            echo "::set-output name=ISSUE_TITLE::${{ github.event.release.name }}"
-            echo "::set-output name=ISSUE_BODY::${{ github.event.release.body }}"
-          fi
+        name: "Set Issue Title & Body"
+        with:
+          script: |
+            const issueTitle = "${{ github.event.release.name }}";
+            const issueBody = "${{ github.event.release.body }}";
+            core.setOutput('ISSUE_TITLE', issueTitle);
+            core.setOutput('ISSUE_BODY', issueBody);
+            
       - uses: trstringer/manual-approval@v1
         timeout-minutes: 10
         with:
