@@ -22,12 +22,13 @@ jobs:
         id: set_issue_title_body
         name: "Set Issue Title & Body"
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const issueTitle = "${{ github.event.release.name }}";
             const issueBody = "${{ github.event.release.body }}";
             core.setOutput('ISSUE_TITLE', issueTitle);
             core.setOutput('ISSUE_BODY', issueBody);
-            
+
       - uses: trstringer/manual-approval@v1
         timeout-minutes: 10
         with:
