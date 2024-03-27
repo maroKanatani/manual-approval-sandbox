@@ -33,11 +33,11 @@ jobs:
 
             switch("${{ github.event_name }}") {
               case "release":
-                issueTitle = "${{ github.event.release.name }}";
+                issueTitle = ":rocket: Release ${{ github.event.release.name }}";
                 issueBody = `${{ github.event.release.body }}`;
                 break;
               case "workflow_dispatch":
-                issueTitle = "🚀 Manual Deploy ${{ github.ref_name }}";
+                issueTitle = ":ambulance: Manual Deploy ${{ github.ref_name }}";
                 issueBody = `## 確認事項
             - [ ] :warning: 本番環境に対して手動でのデプロイを実施します。
             - [ ] デプロイ対象のタグ: **${{ github.ref_name }}**`;
