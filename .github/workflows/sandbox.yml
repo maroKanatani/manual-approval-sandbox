@@ -24,6 +24,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            console.log(JSON.stringify(github.event, null, 2))
             const issueTitle = "${{ github.event.release.name }}";
             const issueBody = `${{ github.event.release.body }}`;
             core.setOutput('ISSUE_TITLE', issueTitle);
