@@ -39,9 +39,8 @@ jobs:
               case "workflow_dispatch":
                 issueTitle = "🚀 Manual Deploy ${{ github.ref_name }}";
                 issueBody = `## 確認事項
-                  - [ ] :warning: 本番環境に対して手動でのデプロイを実施します。
-                  - [ ] デプロイ対象のタグ: 
-                `;
+            - [ ] :warning: 本番環境に対して手動でのデプロイを実施します。
+            - [ ] デプロイ対象のタグ: **${{ github.ref_name }}**`;
                 break;
               default:
                 throw new Error(`Unexpected event: ${{ github.event_name }}`);
